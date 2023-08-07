@@ -7,4 +7,4 @@ from django.shortcuts import render
 def post_page(request, slug):
     post = Post.objects.get(slug=slug)
     context = {"post": post}
-    return request(request, "app/post.html", context=context)
+    return render(request, "app/post.html", context=context)

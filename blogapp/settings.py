@@ -117,6 +117,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+MEDIR_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "upload"
 
 # Default primary key field type
