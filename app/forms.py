@@ -1,10 +1,10 @@
 from django import forms
-from app.models import Comments
+from app.models import Comment
 
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = Comments
+        model = Comment
         fields = {"content", "email", "name", "website"}
 
     def __init__(self, *args, **kwargs):

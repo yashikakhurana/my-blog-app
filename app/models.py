@@ -29,7 +29,7 @@ class Post(models.Model):
     view_count = models.IntegerField(null=True, blank=True)
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     content = models.TextField()
     date = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=200)
