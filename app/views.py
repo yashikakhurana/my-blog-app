@@ -20,12 +20,28 @@ def post_page(request, slug):
     if request.POST:
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid:
-            comment = comment_form.save(commit=False)
-            post_id = request.POST.get("post_id")
-            post = Post.objects.get(id=post_id)
-            comment.post = post
-            comment.save()
-            return HttpResponseRedirect(reverse("post_page", kwargs={"slug": slug}))
+            parent_obj = None
+            if request.POST.get("comment_parent"):
+                # save reply considering comment parent
+                comment_parent = request.POST.get("comment_parent")
+                parent_obj = Comment.objects.get(id=comment_parent)
+                if parent_obj:
+                    comment_reply = comment_form.save(commit=False)
+                    comment_reply.parent = parent_obj
+                    comment_reply.post = post
+                    comment_reply.save()
+                    return HttpResponseRedirect(
+                        reverse("post_page", kwargs={"slug": slug})
+                    )
+
+            else:
+                # comment only
+                comment = comment_form.save(commit=False)
+                post_id = request.POST.get("post_id")
+                post = Post.objects.get(id=post_id)
+                comment.post = post
+                comment.save()
+                return HttpResponseRedirect(reverse("post_page", kwargs={"slug": slug}))
 
     if post.view_count is None:
         post.view_count = 1
