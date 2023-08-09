@@ -17,6 +17,8 @@ def index(request):
         if subscribe_form.is_valid():
             subscribe_form.save()
             subscribe_successful = "Subscribed successfully"
+            # reset form
+            subscribe_form = SubscribeForm()
 
     context = {
         "posts": posts,
