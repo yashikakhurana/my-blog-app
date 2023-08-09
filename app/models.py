@@ -2,7 +2,21 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
+
 # Create your models here.
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(null=True, blank=True, upload_to="images/")
+    slug = models.SlugField(max_length=200, unique=True)
+    bio = models.TextField()
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.user.username)
+        return super(Profile, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.user.first_name
 
 
 class Subscribe(models.Model):
@@ -33,6 +47,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, blank=True, related_name="post")
     view_count = models.IntegerField(null=True, blank=True)
     is_featured = models.BooleanField(default=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Comment(models.Model):
