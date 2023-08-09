@@ -10,8 +10,11 @@ def index(request):
     posts = Post.objects.all()
     top_posts = Post.objects.all().order_by("-view_count")[0:3]
     recent_posts = Post.objects.all().order_by("-last_updated")[0:3]
+    featured_blog = Post.objects.filter(is_featured=True)
     subscribe_form = SubscribeForm()
     subscribe_successful = None
+    if featured_blog:
+        featured_blog = featured_blog[0]
     if request.POST:
         subscribe_form = SubscribeForm(request.POST)
         if subscribe_form.is_valid():
@@ -26,6 +29,7 @@ def index(request):
         "recent_posts": recent_posts,
         "subscribe_form": subscribe_form,
         "subscribe_successful": subscribe_successful,
+        "featured_blog": featured_blog,
     }
     return render(request, "app/index.html", context=context)
 
