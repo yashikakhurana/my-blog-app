@@ -1,5 +1,5 @@
 from app.forms import CommentForm, SubscribeForm
-from app.models import Comment, Post, Tag
+from app.models import Comment, Post, Profile, Tag
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -88,3 +88,20 @@ def tag_page(request, slug):
         "tags": tags,
     }
     return render(request, "app/tag.html", context=context)
+
+
+def author_page(request, slug):
+    author_profile = Profile.objects.get(slug=slug)
+    top_posts = Post.objects.filter(author=author_profile.user).order_by("-view_count")[
+        0:3
+    ]
+    recent_posts = Post.objects.filter(author=author_profile.user).order_by(
+        "-last_updated"
+    )[0:3]
+
+    context = {
+        "author_profile": author_profile,
+        "top_posts": top_posts,
+        "recent_posts": recent_posts,
+    }
+    return render(request, "app/author.html", context=context)
