@@ -1,5 +1,5 @@
 from app.forms import CommentForm, SubscribeForm
-from app.models import Comment, Post, Profile, Tag
+from app.models import Comment, Post, Profile, Tag, WebsiteMeta
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -22,6 +22,10 @@ def index(request):
     featured_blog = Post.objects.filter(is_featured=True)
     subscribe_form = SubscribeForm()
     subscribe_successful = None
+    website_info = None
+    if WebsiteMeta.objects.all().exists():
+        website_info = WebsiteMeta.objects.all()[0]
+
     if featured_blog:
         featured_blog = featured_blog[0]
     if request.POST:
@@ -39,6 +43,7 @@ def index(request):
         "subscribe_form": subscribe_form,
         "subscribe_successful": subscribe_successful,
         "featured_blog": featured_blog,
+        "website_info": website_info,
     }
     return render(request, "app/index.html", context=context)
 
