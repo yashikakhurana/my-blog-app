@@ -5,6 +5,15 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
+def search_posts(request):
+    search_query = ""
+    if request.GET.get("q"):
+        search_query = request.GET.get("q")
+    posts = Post.objects.filter(title__icontains=search_query)
+    context = {"posts": posts, "search_query": search_query}
+    return render(request, "app/search.html", context=context)
+
+
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
