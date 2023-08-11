@@ -42,6 +42,8 @@ def index(request):
         subscribe_form = SubscribeForm(request.POST)
         if subscribe_form.is_valid():
             subscribe_form.save()
+            # store session
+            request.session["subscribed"] = True
             subscribe_successful = "Subscribed successfully"
             # reset form
             subscribe_form = SubscribeForm()
