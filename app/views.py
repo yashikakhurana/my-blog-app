@@ -1,8 +1,24 @@
-from app.forms import CommentForm, SubscribeForm
+from app.forms import CommentForm, SubscribeForm, UserRegistrationForm
 from app.models import Comment, Post, Profile, Tag, WebsiteMeta
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth import login
+
+
+def register_user(request):
+    form = UserRegistrationForm()
+    if request.method == "POST":
+        print("inside form", request)
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # once regsiter, login user
+            login(request, user)
+            return redirect("/")
+
+    context = {"form": form}
+    return render(request, "registration/signup.html", context=context)
 
 
 def about_page(request):

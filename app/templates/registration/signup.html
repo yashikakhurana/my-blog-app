@@ -9,7 +9,8 @@
     <h1>Sign Up</h1>
   </div>
 
-  <form action="#" class="form">
+  <form method="post" class="form">
+    {% csrf_token %}
     <center>
       <div class="logo f-logo">
         <i class="fa-brands fa-blogger"></i>
@@ -17,56 +18,57 @@
       <div class="inputs">
         <div>
           <div class="search-bar s-active input">
-            <input type="text" placeholder="User name" />
+            {{form.username}}
             <div class="animated-search">
               <i class="uil uil-user"></i>
             </div>
           </div>
+          {% if form.username.errors %}
           <div class="field-error">
-            <p>Username already taken. Please try another one.</p>
+            <p>{{form.username.errors.as_text}}</p>
           </div>
+          {% endif %}
         </div>
 
         <div>
           <div class="search-bar s-active input">
-            <input type="email" placeholder="Email" />
+            {{form.email}}
             <div class="animated-search">
               <i class="uil uil-envelope-alt"></i>
             </div>
           </div>
-
+          {% if form.email.errors %}
           <div class="field-error">
-            <p>Enter a valid email address</p>
+            <p>{{form.email.errors.as_text}}</p>
           </div>
+          {% endif %}
         </div>
 
         <div>
           <div class="search-bar s-active input">
-            <input type="tpassword" placeholder="Create password" />
+            {{form.password1}}
             <div class="animated-search">
               <i class="uil uil-key-skeleton"></i>
             </div>
           </div>
+          {% if form.password1.errors %}
           <div class="field-error">
-            <p>
-              This password is too short. It must need to contain at least 8
-              characters
-            </p>
+            <p>{{form.password1.errors.as_text}}</p>
           </div>
+          {% endif %}
         </div>
         <div>
           <div class="search-bar s-active input">
-            <input type="tpassword" placeholder="Confirm password" />
+            {{form.password2}}
             <div class="animated-search">
               <i class="uil uil-key-skeleton"></i>
             </div>
           </div>
+          {% if form.password2.errors %}
           <div class="field-error">
-            <p>
-              This password is too short. It must need to contain at least 8
-              characters
-            </p>
+            <p>{{form.password2.errors.as_text}}</p>
           </div>
+          {% endif %}
         </div>
         <button class="btn btn-primary rounded">
           SIGN UP <span class="material-icons"> arrow_right_alt </span>
