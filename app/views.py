@@ -1,9 +1,19 @@
 from app.forms import CommentForm, SubscribeForm, UserRegistrationForm
 from app.models import Comment, Post, Profile, Tag, WebsiteMeta
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login
+
+
+def bookmark_post(request, slug):
+    print("print", request.POST)
+    post = get_object_or_404(Post, id=request.POST.get("post_id"))
+    if post.bookmarks.filter(id=request.user.id).exists():
+        post.bookmarks.remove(request.user)
+    else:
+        post.bookmarks.add(request.user)
+    return HttpResponseRedirect(reverse("post_page", args=[str(slug)]))
 
 
 def register_user(request):
@@ -81,6 +91,12 @@ def post_page(request, slug):
     form = CommentForm()
     comments = Comment.objects.filter(post=post, parent=None)
 
+    # Bookmark logic
+    bookmarked = False
+    if post.bookmarks.filter(id=request.user.id).exists():
+        bookmarked = True
+    is_bookmarked = bookmarked
+
     if request.POST:
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid:
@@ -113,7 +129,12 @@ def post_page(request, slug):
         post.view_count += 1
     post.save()
 
-    context = {"post": post, "form": form, "comments": comments}
+    context = {
+        "post": post,
+        "form": form,
+        "comments": comments,
+        "is_bookmarked": is_bookmarked,
+    }
     return render(request, "app/post.html", context=context)
 
 
