@@ -6,8 +6,16 @@ from django.urls import reverse
 from django.contrib.auth import login
 
 
+def like_post(request, slug):
+    post = get_object_or_404(Post, id=request.POST.get("post_id"))
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return HttpResponseRedirect(reverse("post_page", args=[str(slug)]))
+
+
 def bookmark_post(request, slug):
-    print("print", request.POST)
     post = get_object_or_404(Post, id=request.POST.get("post_id"))
     if post.bookmarks.filter(id=request.user.id).exists():
         post.bookmarks.remove(request.user)
@@ -97,6 +105,13 @@ def post_page(request, slug):
         bookmarked = True
     is_bookmarked = bookmarked
 
+    # Likes logic
+    liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        liked = True
+    number_of_likes = post.number_of_likes()
+    is_post_liked = liked
+
     if request.POST:
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid:
@@ -134,6 +149,8 @@ def post_page(request, slug):
         "form": form,
         "comments": comments,
         "is_bookmarked": is_bookmarked,
+        "is_post_liked": is_post_liked,
+        "number_of_likes": number_of_likes,
     }
     return render(request, "app/post.html", context=context)
 
