@@ -6,6 +6,12 @@ from django.urls import reverse
 from django.contrib.auth import login
 
 
+def all_liked_posts(request):
+    all_liked_posts = Post.objects.filter(likes=request.user)
+    context = {"all_liked_posts": all_liked_posts}
+    return render(request, "app/all_liked_posts.html", context=context)
+
+
 def all_posts(request):
     all_posts = Post.objects.all()
     context = {"all_posts": all_posts}

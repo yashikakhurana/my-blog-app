@@ -15,4 +15,5 @@ urlpatterns = [
         "all_bookmark_posts/", views.all_bookmarked_posts, name="all_bookmarked_posts"
     ),
     path("all_posts/", views.all_posts, name="all_posts"),
+    path("all_liked_posts/", views.all_liked_posts, name="all_liked_posts"),
 ]
