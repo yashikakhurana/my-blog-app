@@ -6,6 +6,12 @@ from django.urls import reverse
 from django.contrib.auth import login
 
 
+def all_bookmarked_posts(request):
+    all_bookmarked_posts = Post.objects.filter(bookmarks=request.user)
+    context = {"all_bookmarked_posts": all_bookmarked_posts}
+    return render(request, "app/allpost.html", context=context)
+
+
 def like_post(request, slug):
     post = get_object_or_404(Post, id=request.POST.get("post_id"))
     if post.likes.filter(id=request.user.id).exists():
